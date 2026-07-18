@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download Black IDE — Telemetry-Free VS Code & AI Agent</title>
+<meta name="description" content="Download Black IDE: A custom, telemetry-free distribution of VS Code featuring a built-in AI coding assistant and agentic loop engine.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap header-row">
+    <a href="../index.html" class="brand"><span class="brand-dot"></span>black_ide</a>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="#downloads">Matrix</a>
+      <a href="https://github.com/ornate-source/blackIDE" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/ornate-source/blackIDE/releases" target="_blank" rel="noopener" class="nav-cta">Releases ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap centered">
+    <div class="hero-container reveal">
+      <div class="eyebrow" id="version-badge">v1.121.04567 · latest release</div>
+      <h1>Download Black IDE</h1>
+      <p class="hero-desc">Prism-clean VS Code base with absolute compiled telemetry isolation and built-in agent loops.</p>
+      
+      <!-- Status warning banner -->
+      <div class="status-banner" id="status-banner">
+        <span>⚠️ API rate limit hit. Showing cached installers for <strong id="fallback-tag">v1.121.04567</strong>.</span>
+        <a href="https://github.com/ornate-source/blackIDE/releases/latest" target="_blank" rel="noopener">Open GitHub Releases</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="install wrap reveal" id="install" style="transition-delay: 100ms;">
+    <div class="install-head">
+      <div class="section-label">Select Platform</div>
+      <span class="status-pill" id="status-pill"><span class="status-dot" id="status-dot"></span><span id="status-text">Checking release channel…</span></span>
+    </div>
+
+    <div class="platform-grid" id="platform-grid">
+      
+      <!-- macOS Card -->
+      <div class="platform-card" id="cta-card-macos">
+        <div class="platform-head">
+          <div class="platform-icon"><img src="../icons/apple-logo.png" alt="macOS"></div>
+          <div class="platform-name">macOS</div>
+          <span class="badge">Detected</span>
+        </div>
+        <a id="btn-macos" class="btn-download" href="https://github.com/ornate-source/blackIDE/releases">
+          <span class="spinner-sm" id="spinner-macos"></span>
+          <span>Download Installer (.dmg)</span>
+        </a>
+        <div class="platform-meta" id="meta-macos">Apple Silicon · —</div>
+        <div class="platform-links">
+          <a id="link-macos-zip" class="link-chip" href="#">Portable ZIP</a>
+          <a id="link-macos-cli" class="link-chip" href="#">CLI Binary</a>
+        </div>
+      </div>
+
+      <!-- Windows Card -->
+      <div class="platform-card" id="cta-card-windows">
+        <div class="platform-head">
+          <div class="platform-icon"><img src="../icons/microsoft.png" alt="Windows"></div>
+          <div class="platform-name">Windows</div>
+          <span class="badge">Detected</span>
+        </div>
+        <a id="btn-windows" class="btn-download" href="https://github.com/ornate-source/blackIDE/releases">
+          <span class="spinner-sm" id="spinner-windows"></span>
+          <span>Download Installer (.exe)</span>
+        </a>
+        <div class="platform-meta" id="meta-windows">x64 User Setup · —</div>
+        <div class="platform-links">
+          <a id="link-windows-system" class="link-chip" href="#">System Setup</a>
+          <a id="link-windows-zip" class="link-chip" href="#">Portable ZIP</a>
+        </div>
+      </div>
+
+      <!-- Linux Card -->
+      <div class="platform-card" id="cta-card-linux">
+        <div class="platform-head">
+          <div class="platform-icon"><img src="../icons/linux.png" alt="Linux"></div>
+          <div class="platform-name">Linux</div>
+          <span class="badge">Detected</span>
+        </div>
+        <div class="linux-btn-group">
+          <a id="btn-linux-deb" class="btn-download btn-half" href="https://github.com/ornate-source/blackIDE/releases">
+            <span class="spinner-sm" id="spinner-linux-deb"></span>
+            <span>.deb</span>
+          </a>
+          <a id="btn-linux-rpm" class="btn-download btn-half" href="https://github.com/ornate-source/blackIDE/releases">
+            <span class="spinner-sm" id="spinner-linux-rpm"></span>
+            <span>.rpm</span>
+          </a>
+        </div>
+        <div class="platform-meta" id="meta-linux">Debian / RedHat · —</div>
+        <div class="platform-links">
+          <a id="link-linux-appimage" class="link-chip" href="#">AppImage</a>
+          <a id="link-linux-tar" class="link-chip" href="#">Tarball (.tar.gz)</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Installer Hub Matrix Table -->
+  <section class="installer-matrix wrap" id="downloads">
+    <div class="matrix-header reveal">
+      <h2 class="matrix-title">Release Binaries</h2>
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="macos">macOS</button>
+        <button class="filter-tab" data-filter="windows">Windows</button>
+        <button class="filter-tab" data-filter="linux">Linux</button>
+      </div>
+    </div>
+
+    <div class="table-container reveal" style="transition-delay: 50ms;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 35%;">Package / Type</th>
+            <th style="width: 15%;">Arch</th>
+            <th style="width: 15%;">Format</th>
+            <th style="width: 15%;">Size</th>
+            <th style="width: 20%;">Download</th>
+          </tr>
+        </thead>
+        <tbody id="matrix-tbody">
+          <tr>
+            <td colspan="5" class="placeholder-row">Initializing release matrix...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="wrap footer-row">
+    <div class="footer-left">
+      <p>blackIDE is an open-source development project. Based on Microsoft VS Code and VSCodium.</p>
+      <p style="opacity: 0.5;">Code compiled and signed under the Ornate Source toolchain.</p>
+    </div>
+
+    <div class="footer-links">
+      <a href="https://github.com/ornate-source/blackIDE" target="_blank" rel="noopener">Repository</a>
+      <span class="api-status">
+        <span class="api-status-dot" id="api-dot"></span>
+        <span id="api-text">API Status: Loading</span>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- App Script logic -->
+<script src="../releases.js"></script>
+<script>
+  const CONFIG = {
+    owner: 'ornate-source',
+    repo: 'blackIDE',
+    fallbackVersion: '1.121.04567',
+    fallbackReleaseDate: '2026-07-09'
+  };
+
+  // SVG Icons inside matrix rows
+  const SVGS = {
+    macos: `<img src="../icons/apple-logo.png" alt="macOS">`,
+    windows: `<img src="../icons/microsoft.png" alt="Windows">`,
+    linux: `<img src="../icons/linux.png" alt="Linux">`
+  };
+
+  // Format bytes to MB/KB dynamically
+  function formatSize(bytes) {
+    if (!bytes || isNaN(bytes)) return '—';
+    const mb = bytes / (1024 * 1024);
+    return `${mb.toFixed(1)} MB`;
+  }
+
+  // Static Template Assets Matrix fallback
+  function getFallbackAssets(version) {
+    return [
+      { name: `Black IDE.arm64.${version}.dmg`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/Black%20IDE.arm64.${version}.dmg`, size: 0, os: 'macos', arch: 'ARM64', label: 'macOS Installer (.dmg)' },
+      { name: `Black IDE-darwin-arm64-${version}.zip`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/Black%20IDE-darwin-arm64-${version}.zip`, size: 0, os: 'macos', arch: 'ARM64', label: 'macOS Portable (.zip)' },
+      { name: `black ide-cli-darwin-arm64-${version}.tar.gz`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/black%20ide-cli-darwin-arm64-${version}.tar.gz`, size: 0, os: 'macos', arch: 'ARM64', label: 'CLI binary (.tar.gz)' },
+      { name: `Black.IDEUserSetup-x64-${version}.exe`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/Black.IDEUserSetup-x64-${version}.exe`, size: 146098897, os: 'windows', arch: 'x64', label: 'User Setup (.exe)' },
+      { name: `Black.IDEUserSetup-arm64-${version}.exe`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/Black.IDEUserSetup-arm64-${version}.exe`, size: 139336630, os: 'windows', arch: 'ARM64', label: 'User Setup (.exe)' },
+      { name: `Black.IDESetup-x64-${version}.exe`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/Black.IDESetup-x64-${version}.exe`, size: 146098534, os: 'windows', arch: 'x64', label: 'System Setup (.exe)' },
+      { name: `Black.IDE-win32-x64-${version}.zip`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/Black.IDE-win32-x64-${version}.zip`, size: 204032718, os: 'windows', arch: 'x64', label: 'Portable Archive (.zip)' },
+      { name: `black-ide_${version}_amd64.deb`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/black-ide_${version}_amd64.deb`, size: 132473488, os: 'linux', arch: 'x64', label: 'Debian / Ubuntu (.deb)' },
+      { name: `black-ide-${version}-el8.x86_64.rpm`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/black-ide-${version}-el8.x86_64.rpm`, size: 188262751, os: 'linux', arch: 'x64', label: 'RedHat / Fedora (.rpm)' },
+      { name: `Black_IDE-${version}.glibc2.30-x86_64.AppImage`, url: `https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases/download/${version}/Black_IDE-${version}.glibc2.30-x86_64.AppImage`, size: 191214784, os: 'linux', arch: 'x64', label: 'AppImage (.AppImage)' }
+    ];
+  }
+
+  // Parse dynamic asset and assign metadata
+  function parseAsset(asset) {
+    const name = asset.name;
+    const url = asset.browser_download_url;
+    const size = asset.size;
+
+    let os = '';
+    if (name.includes('darwin') || name.endsWith('.dmg') || name.includes('macOS') || name.includes('Mac')) {
+      os = 'macos';
+    } else if (name.includes('win32') || name.includes('Setup') || name.endsWith('.exe') || name.endsWith('.zip') && name.includes('win32')) {
+      os = 'windows';
+    } else if (name.includes('linux') || name.endsWith('.deb') || name.endsWith('.rpm') || name.endsWith('.AppImage')) {
+      os = 'linux';
+    } else {
+      return null;
+    }
+
+    if (name.endsWith('.zsync') || name.includes('-reh-') || name.includes('-reh-web-')) {
+      return null;
+    }
+
+    let arch = 'x64';
+    if (name.includes('arm64') || name.includes('aarch64')) {
+      arch = 'ARM64';
+    } else if (name.includes('armhf') || name.includes('armv7')) {
+      arch = 'ARMv7';
+    }
+
+    let label = 'Binary Package';
+    if (name.endsWith('.dmg')) label = 'macOS Installer (.dmg)';
+    else if (name.endsWith('.exe') && name.includes('UserSetup')) label = 'User Setup (.exe)';
+    else if (name.endsWith('.exe') && name.includes('Setup')) label = 'System Setup (.exe)';
+    else if (name.endsWith('.zip') && os === 'windows') label = 'Portable Archive (.zip)';
+    else if (name.endsWith('.zip') && os === 'macos') label = 'macOS Portable (.zip)';
+    else if (name.endsWith('.deb')) label = 'Debian / Ubuntu (.deb)';
+    else if (name.endsWith('.rpm')) label = 'RedHat / Fedora (.rpm)';
+    else if (name.endsWith('.AppImage')) label = 'AppImage (.AppImage)';
+    else if (name.endsWith('.tar.gz') && name.includes('-cli-')) label = 'CLI binary (.tar.gz)';
+    else if (name.endsWith('.tar.gz')) label = 'Compressed Tarball (.tar.gz)';
+
+    return { name, url, size, os, arch, label };
+  }
+
+  function getOS() {
+    const platform = (navigator.userAgentData?.platform || navigator.platform || '').toLowerCase();
+    const userAgent = navigator.userAgent.toLowerCase();
+
+    if (platform.includes('mac') || userAgent.includes('mac') || userAgent.includes('iphone') || userAgent.includes('ipad')) return 'macos';
+    if (platform.includes('win') || userAgent.includes('win')) return 'windows';
+    if (platform.includes('linux') || userAgent.includes('linux')) return 'linux';
+    return 'other';
+  }
+
+  async function getArch() {
+    if (navigator.userAgentData?.getHighEntropyValues) {
+      try {
+        const hints = await navigator.userAgentData.getHighEntropyValues(['architecture']);
+        if (hints.architecture === 'arm') return 'ARM64';
+      } catch (e) {}
+    }
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes('arm64') || ua.includes('aarch64') || ua.includes('apple silicon')) return 'ARM64';
+    return 'x64';
+  }
+
+  let globalAssets = [];
+
+  function renderMatrixTable(filterOS = 'all') {
+    const tbody = document.getElementById('matrix-tbody');
+    const filtered = globalAssets.filter(asset => {
+      if (filterOS === 'all') return true;
+      return asset.os === filterOS;
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="placeholder-row">No matching packages available</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(asset => {
+      const platformIcon = SVGS[asset.os] || '';
+      const fileExt = asset.name.split('.').pop();
+
+      return `
+        <tr data-os="${asset.os}">
+          <td>
+            <span class="col-platform">
+              <span class="table-os-icon">${platformIcon}</span>
+              <span>${asset.label}</span>
+            </span>
+          </td>
+          <td><span class="col-arch">${asset.arch}</span></td>
+          <td><span class="col-format">${fileExt.toUpperCase()}</span></td>
+          <td><span class="col-size">${formatSize(asset.size)}</span></td>
+          <td class="col-link">
+            <a href="${asset.url}">
+              <span>Download</span>
+              <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-left: 2px;">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function setupFilterTabs() {
+    const tabs = document.querySelectorAll('.filter-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const filter = tab.getAttribute('data-filter');
+        renderMatrixTable(filter);
+      });
+    });
+  }
+
+  async function init() {
+    const versionText = document.getElementById('version-badge');
+    const statusBanner = document.getElementById('status-banner');
+    const fallbackTag = document.getElementById('fallback-tag');
+    const apiDot = document.getElementById('api-dot');
+    const apiText = document.getElementById('api-text');
+
+    const userOS = getOS();
+    const userArch = await getArch();
+
+    let releaseVersion = CONFIG.fallbackVersion;
+    let isLive = false;
+    let isLocal = false;
+
+    setupFilterTabs();
+
+    try {
+      let data;
+      if (window.LATEST_RELEASE) {
+        data = window.LATEST_RELEASE;
+        isLive = true;
+        isLocal = true;
+      } else {
+        const response = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/releases/latest`);
+        if (!response.ok) throw new Error(`API status ${response.status}`);
+        data = await response.json();
+        isLive = true;
+      }
+
+      releaseVersion = data.tag_name || CONFIG.fallbackVersion;
+
+      if (data.assets && data.assets.length > 0) {
+        data.assets.forEach(asset => {
+          const parsed = parseAsset(asset);
+          if (parsed) globalAssets.push(parsed);
+        });
+      }
+
+      if (globalAssets.length > 0) {
+        const osCount = { macos: 0, windows: 0, linux: 0 };
+        globalAssets.forEach(a => { osCount[a.os]++; });
+        ['macos', 'windows', 'linux'].forEach(os => {
+          if (osCount[os] === 0) {
+            const fallbackForOS = getFallbackAssets(releaseVersion).filter(a => a.os === os);
+            globalAssets.push(...fallbackForOS);
+          }
+        });
+      } else {
+        globalAssets = getFallbackAssets(releaseVersion);
+      }
+    } catch (err) {
+      fallbackTag.textContent = `v${CONFIG.fallbackVersion}`;
+      statusBanner.style.display = 'inline-flex';
+      globalAssets = getFallbackAssets(CONFIG.fallbackVersion);
+      apiDot.classList.add('fallback');
+      apiText.textContent = 'Offline Fallback';
+    }
+
+    if (isLive) {
+      apiDot.className = 'api-status-dot';
+      apiText.textContent = isLocal ? 'Release Cache: Active' : 'API Connection: Stable';
+    }
+
+    const osOrder = { macos: 1, linux: 2, windows: 3 };
+    globalAssets.sort((a, b) => {
+      if (osOrder[a.os] !== osOrder[b.os]) return osOrder[a.os] - osOrder[b.os];
+      return a.label.localeCompare(b.label) || a.arch.localeCompare(b.arch);
+    });
+
+    const grouped = { macos: [], windows: [], linux: [] };
+    globalAssets.forEach(asset => {
+      if (grouped[asset.os]) grouped[asset.os].push(asset);
+    });
+
+    renderMatrixTable('all');
+
+    if (userOS && userOS !== 'other') {
+      const activeCard = document.getElementById(`cta-card-${userOS}`);
+      if (activeCard) activeCard.classList.add('detected');
+    }
+
+    ['spinner-macos', 'spinner-windows', 'spinner-linux-deb', 'spinner-linux-rpm'].forEach(id => {
+      const spinner = document.getElementById(id);
+      if (spinner) spinner.style.display = 'none';
+    });
+
+    const macDmg = grouped.macos.find(a => a.name.endsWith('.dmg'));
+    const macZip = grouped.macos.find(a => a.name.endsWith('.zip'));
+    const macCli = grouped.macos.find(a => a.name.includes('-cli-'));
+    if (macDmg) {
+      document.getElementById('btn-macos').href = macDmg.url;
+      document.getElementById('meta-macos').textContent = `M-Series DMG • ${formatSize(macDmg.size)}`;
+    }
+    if (macZip) document.getElementById('link-macos-zip').href = macZip.url;
+    if (macCli) document.getElementById('link-macos-cli').href = macCli.url;
+
+    const winUserSetup = grouped.windows.find(a => a.name.includes('UserSetup') && a.arch === 'x64') || grouped.windows.find(a => a.name.includes('UserSetup'));
+    const winSystemSetup = grouped.windows.find(a => a.name.includes('Setup') && !a.name.includes('UserSetup') && a.arch === 'x64') || grouped.windows.find(a => a.name.includes('Setup') && !a.name.includes('UserSetup'));
+    const winZip = grouped.windows.find(a => a.name.endsWith('.zip') && a.arch === 'x64') || grouped.windows.find(a => a.name.endsWith('.zip'));
+    if (winUserSetup) {
+      document.getElementById('btn-windows').href = winUserSetup.url;
+      document.getElementById('meta-windows').textContent = `x64 User Setup • ${formatSize(winUserSetup.size)}`;
+    }
+    if (winSystemSetup) document.getElementById('link-windows-system').href = winSystemSetup.url;
+    if (winZip) document.getElementById('link-windows-zip').href = winZip.url;
+
+    const linuxDeb = grouped.linux.find(a => a.name.endsWith('.deb') && a.arch === 'x64') || grouped.linux.find(a => a.name.endsWith('.deb'));
+    const linuxRpm = grouped.linux.find(a => a.name.endsWith('.rpm') && a.arch === 'x64') || grouped.linux.find(a => a.name.endsWith('.rpm'));
+    const linuxAppImage = grouped.linux.find(a => a.name.endsWith('.AppImage'));
+    const linuxTar = grouped.linux.find(a => a.name.endsWith('.tar.gz') && a.arch === 'x64') || grouped.linux.find(a => a.name.endsWith('.tar.gz'));
+
+    if (linuxDeb) {
+      document.getElementById('btn-linux-deb').href = linuxDeb.url;
+      document.getElementById('btn-linux-deb').title = `Download Debian/Ubuntu package (${formatSize(linuxDeb.size)})`;
+    }
+    if (linuxRpm) {
+      document.getElementById('btn-linux-rpm').href = linuxRpm.url;
+      document.getElementById('btn-linux-rpm').title = `Download RedHat/Fedora package (${formatSize(linuxRpm.size)})`;
+    }
+    if (linuxDeb && linuxRpm) {
+      document.getElementById('meta-linux').textContent = `deb: ${formatSize(linuxDeb.size)} | rpm: ${formatSize(linuxRpm.size)}`;
+    }
+    if (linuxAppImage) document.getElementById('link-linux-appimage').href = linuxAppImage.url;
+    if (linuxTar) document.getElementById('link-linux-tar').href = linuxTar.url;
+
+    if (versionText) versionText.textContent = `v${releaseVersion} · latest release`;
+    
+    // Trigger scroll-reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
