@@ -14,13 +14,21 @@
 
 <header>
   <div class="wrap header-row">
-    <a href="../index.html" class="brand"><span class="brand-dot"></span>black_ide</a>
+    <a href="../index.html" class="brand"><span class="brand-dot"></span>Black IDE</a>
     <nav>
       <a href="../index.html">Home</a>
       <a href="#downloads">Matrix</a>
       <a href="https://github.com/ornate-source/blackIDE" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://github.com/ornate-source/blackIDE/releases" target="_blank" rel="noopener" class="nav-cta">Releases ↗</a>
     </nav>
+    <div class="header-right">
+      <button class="nav-doc-icon" aria-label="Documentation panel">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="3" x2="9" y2="21"></line>
+        </svg>
+      </button>
+      <a href="#downloads" class="nav-cta">Download Now</a>
+    </div>
   </div>
 </header>
 
@@ -147,16 +155,20 @@
 <!-- Footer -->
 <footer>
   <div class="wrap footer-row">
-    <div class="footer-left">
-      <p>blackIDE is an open-source development project. Based on Microsoft VS Code and VSCodium.</p>
-      <p style="opacity: 0.5;">Code compiled and signed under the Ornate Source toolchain.</p>
+    <div>
+      <span style="font-family: var(--font-display); font-weight: 700; color: var(--ink);">Black IDE</span>
+      <p style="margin-top: 0.35rem; font-size: 0.72rem; color: var(--ink-mute);">© 2024 Black IDE. Sovereign Engineering.</p>
     </div>
-
     <div class="footer-links">
-      <a href="https://github.com/ornate-source/blackIDE" target="_blank" rel="noopener">Repository</a>
+      <a href="#">Privacy</a>
+      <a href="#">Security</a>
+      <a href="#">Open Source</a>
+      <a href="https://github.com/ornate-source/blackIDE" target="_blank" rel="noopener">GitHub</a>
+      <a href="#" target="_blank" rel="noopener">Discord</a>
+      <a href="#" target="_blank" rel="noopener">Twitter</a>
       <span class="api-status">
         <span class="api-status-dot" id="api-dot"></span>
-        <span id="api-text">API Status: Loading</span>
+        <span id="api-text">API: Loading</span>
       </span>
     </div>
   </div>

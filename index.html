@@ -14,215 +14,357 @@
 
 <header>
   <div class="wrap header-row">
-    <a href="#" class="brand"><span class="brand-dot"></span>black_ide</a>
+    <a href="#" class="brand"><span class="brand-dot"></span>Black IDE</a>
     <nav>
-      <a href="#install">Install</a>
       <a href="#features">Features</a>
-      <a href="https://github.com/ornate-source/blackIDE" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://github.com/ornate-source/blackIDE/releases" target="_blank" rel="noopener" class="nav-cta">Releases ↗</a>
+      <a href="https://github.com/ornate-source/blackIDE/wiki" target="_blank" rel="noopener">Documentation</a>
+      <a href="#install">Telemetry-Free</a>
     </nav>
+    <div class="header-right">
+      <button class="nav-doc-icon" aria-label="Documentation panel">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="3" x2="9" y2="21"></line>
+        </svg>
+      </button>
+      <a href="#install" class="nav-cta">Download Now</a>
+    </div>
   </div>
 </header>
 
 <main>
   <section class="hero wrap">
-    <div class="hero-grid">
-      <div class="reveal">
-        <div class="eyebrow" id="version-badge">v1.121.04567 · latest release</div>
-        <h1>VS Code, minus the<br>telemetry. Plus <em>an agent</em><br>that ships code.</h1>
-        <p class="hero-desc">Black IDE is a VSCodium build with every upstream tracker compiled out, and a coding agent wired directly into the sidebar — not bolted on as an extension.</p>
-        <div class="cta-row">
-          <a href="#install" class="btn btn-primary">Download for your OS</a>
-          <a href="https://github.com/ornate-source/blackIDE" target="_blank" rel="noopener" class="btn btn-secondary">View source</a>
-        </div>
-        <p class="cta-fine">Open source · <strong>0.00 USD</strong> · macOS, Windows, Linux</p>
+    <div class="hero-container reveal">
+      <div class="eyebrow" id="version-badge">v2.4.0 Released</div>
+      <h1>The Expert Tool for <span><em>Sovereign Engineering</em></span></h1>
+      <p class="hero-desc">A high-performance, telemetry-free development environment built for absolute control. Designed with surgical precision to keep your data local and your focus undivided.</p>
+      <div class="cta-row">
+        <a href="#install" class="btn btn-primary" id="hero-primary-cta">Download for Linux</a>
+        <a href="https://github.com/ornate-source/blackIDE/wiki" target="_blank" rel="noopener" class="btn btn-secondary">Read the Docs</a>
       </div>
+    </div>
+  </section>
 
-      <div class="editor reveal" style="transition-delay: 100ms;" aria-hidden="true">
-        <div class="editor-tabs">
-          <div class="tab active"><span class="tab-dot" style="background:var(--amber)"></span>auth.ts</div>
-          <div class="tab">agent.log</div>
-          <div class="tab">README.md</div>
+  <!-- Rust split-editor mock -->
+  <section class="wrap reveal" style="transition-delay: 50ms;">
+    <div class="editor-frame">
+      <div class="editor-header">
+        <div class="window-dots">
+          <span class="window-dot red"></span>
+          <span class="window-dot yellow"></span>
+          <span class="window-dot green"></span>
         </div>
-        <div class="editor-body">
-          <div class="gutter">1
-2
-3
-4
-5
-6
-7
-8
-9</div>
-          <div class="code"><span class="cm">// agent: refactor auth to use jwt middleware</span>
-<span class="kw">import</span> { verify } <span class="kw">from</span> <span class="str">'./jwt'</span>
-
-<span class="kw">export function</span> <span class="fn">authenticate</span>(req, res, next) {
-<span class="agent-line">  <span class="kw">const</span> token = req.headers[<span class="str">'authorization'</span>]</span>
-<span class="agent-line">  <span class="kw">if</span> (!verify(token)) <span class="kw">return</span> res.status(<span class="str">401</span>).end()</span>
-  next()
-}
-<span class="cm">// 2 files changed · awaiting review</span><span class="caret"></span></div>
+        <div class="editor-tabs">
+          <div class="tab active">
+            <span class="tab-icon rust">🦀</span>
+            <span>main.rs</span>
+          </div>
+          <div class="tab">
+            <span class="tab-icon cog">⚙️</span>
+            <span>config.toml</span>
+          </div>
+        </div>
+        <div></div>
+      </div>
+      <div class="editor-layout">
+        <div class="editor-sidebar">
+          <!-- Folder Icon -->
+          <svg class="sidebar-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <!-- Search Icon -->
+          <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <!-- Plugins/Extensions Icon -->
+          <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          </svg>
+          <!-- Run/Play Icon -->
+          <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <div class="editor-workspace">
+          <div class="editor-pane left-pane">
+            <span class="code-gutter">1</span><span class="code-content"><span class="code-keyword">use</span> std::sync::Arc;</span><br>
+            <span class="code-gutter">2</span><span class="code-content"><span class="code-keyword">use</span> tokio::sync::Mutex;</span><br>
+            <span class="code-gutter">3</span><span class="code-content"></span><br>
+            <span class="code-gutter">4</span><span class="code-content"><span class="code-keyword">pub struct</span> <span class="code-type">Engine</span> {</span><br>
+            <span class="code-gutter">5</span><span class="code-content">    state: Arc&lt;Mutex&lt;State&gt;&gt;,</span><br>
+            <span class="code-gutter">6</span><span class="code-content">}</span>
+          </div>
+          <div class="editor-pane right-pane">
+            <div class="right-pane-graphic">
+              <div class="graphic-line long"></div>
+              <div class="graphic-line med"></div>
+              <div class="graphic-line short"></div>
+              <div class="graphic-line long"></div>
+              <div class="graphic-line med"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="install wrap reveal" id="install" style="transition-delay: 150ms;">
+  <!-- Dynamic Platform Install Section -->
+  <section class="install wrap reveal" id="install" style="transition-delay: 100ms;">
     <div class="install-head">
       <div class="section-label">Download</div>
       <span class="status-pill" id="status-pill"><span class="status-dot" id="status-dot"></span><span id="status-text">Checking release channel…</span></span>
     </div>
 
     <div class="platform-grid" id="platform-grid">
+      <!-- macOS Card -->
       <div class="platform-card" id="card-macos">
         <div class="platform-head">
           <div class="platform-icon"><img src="./icons/apple-logo.png" alt="macOS"></div>
           <div class="platform-name">macOS</div>
           <span class="badge">Detected</span>
         </div>
-        <div class="platform-links">
-          <a class="link-chip" id="link-macos-dmg" href="#">.dmg</a>
-          <a class="link-chip" id="link-macos-zip" href="#">.zip</a>
-          <a class="link-chip" id="link-macos-cli" href="#">CLI</a>
-        </div>
+        <a id="link-macos-dmg" class="btn-download" href="#">
+          <span>Download Installer (.dmg)</span>
+        </a>
         <div class="platform-meta" id="meta-macos">Apple Silicon · —</div>
+        <div class="platform-links">
+          <a id="link-macos-zip" class="link-chip" href="#">Portable ZIP</a>
+          <a id="link-macos-cli" class="link-chip" href="#">CLI Binary</a>
+        </div>
       </div>
 
+      <!-- Windows Card -->
       <div class="platform-card" id="card-windows">
         <div class="platform-head">
           <div class="platform-icon"><img src="./icons/microsoft.png" alt="Windows"></div>
           <div class="platform-name">Windows</div>
           <span class="badge">Detected</span>
         </div>
+        <a id="link-windows-user" class="btn-download" href="#">
+          <span>Download User Setup (.exe)</span>
+        </a>
+        <div class="platform-meta" id="meta-windows">x64 User Setup · —</div>
         <div class="platform-links">
-          <a class="link-chip" id="link-windows-user" href="#">User setup</a>
-          <a class="link-chip" id="link-windows-system" href="#">System setup</a>
-          <a class="link-chip" id="link-windows-zip" href="#">.zip</a>
+          <a id="link-windows-system" class="link-chip" href="#">System Setup</a>
+          <a id="link-windows-zip" class="link-chip" href="#">Portable ZIP</a>
         </div>
-        <div class="platform-meta" id="meta-windows">x64 / ARM64 · —</div>
       </div>
 
+      <!-- Linux Card -->
       <div class="platform-card" id="card-linux">
         <div class="platform-head">
           <div class="platform-icon"><img src="./icons/linux.png" alt="Linux"></div>
           <div class="platform-name">Linux</div>
           <span class="badge">Detected</span>
         </div>
-        <div class="platform-links">
-          <a class="link-chip" id="link-linux-deb" href="#">.deb</a>
-          <a class="link-chip" id="link-linux-rpm" href="#">.rpm</a>
-          <a class="link-chip" id="link-linux-appimage" href="#">AppImage</a>
+        <div class="linux-btn-group">
+          <a id="link-linux-deb" class="btn-download btn-half" href="#">
+            <span>.deb</span>
+          </a>
+          <a id="link-linux-rpm" class="btn-download btn-half" href="#">
+            <span>.rpm</span>
+          </a>
         </div>
-        <div class="platform-meta" id="meta-linux">x64 / ARM64 · —</div>
+        <div class="platform-meta" id="meta-linux">Debian / RedHat · —</div>
+        <div class="platform-links">
+          <a id="link-linux-appimage" class="link-chip" href="#">AppImage</a>
+        </div>
       </div>
     </div>
 
     <a href="./download/index.html#downloads" class="matrix-toggle" style="text-decoration:none;">Show all packages ↓</a>
   </section>
 
+  <!-- Features Grid Section -->
   <section class="features wrap" id="features">
-    <div class="features-head reveal">
-      <h2>Two ideas, executed carefully</h2>
-      <p>Everything else — worktrees, checkpoints, indexing — exists to support these two: nothing runs without approval, and nothing is lost.</p>
-    </div>
-
-    <div class="feat-grid">
-      <!-- 01 Plan Approve Run -->
-      <div class="feat span-4 reveal" style="transition-delay: 0ms;">
-        <div class="feat-icon">01 · plan → approve → run</div>
-        <h3>Nothing executes unreviewed</h3>
-        <p>A prompt like "build a CRM" produces a plan file first. The agent stops there. You read <code>features_plan.md</code>, adjust it, and only then does execution start — one file at a time, one diff at a time.</p>
-        
-        <div class="feat-graphic pipeline-steps">
-          <div class="step-node done"><span>✓</span> <span>Manager Intake</span></div>
-          <div class="step-node done"><span>✓</span> <span>HLD & LLD Plan Created</span></div>
-          <div class="step-node active"><span class="pulse-dot"></span> <span>Awaiting Approval (features_plan.md)</span></div>
-          <div class="step-node"><span>○</span> <span>Design / Code / Test execution</span></div>
+    <div class="features-grid">
+      
+      <!-- Card 1: Plan Approve Run (Wide) -->
+      <div class="feat-card wide reveal" style="transition-delay: 0ms;">
+        <div class="feat-content">
+          <div class="feat-label">01 · plan → approve → run</div>
+          <h2>Plan → Approve → Run. <br>Total Authority.</h2>
+          <p>The agent never executes code behind your back. It analyzes the context and produces a detailed features_plan.md. You review the intended changes, approve them, and then Black IDE executes the implementation layers. Absolute predictability.</p>
         </div>
-      </div>
-
-      <!-- 02 Rollback -->
-      <div class="feat span-2 reveal" style="transition-delay: 100ms;">
-        <div class="feat-icon">02 · rollback</div>
-        <h3>Undo per hunk</h3>
-        <p>Every change is stored as a diff hunk, not a full file snapshot. Revert one function without touching changes elsewhere.</p>
-        
-        <div class="diff">
-          <span class="del">- old_auth_logic()</span><br>
-          <span class="add">+ new_jwt_middleware()</span><br>
-          <span style="color: var(--ink-mute); font-size: 0.65rem; display: block; margin-top: 0.5rem; text-align: right;">[Revert Hunk]</span>
-        </div>
-      </div>
-
-      <!-- 03 Isolation -->
-      <div class="feat span-3 reveal" style="transition-delay: 0ms;">
-        <div class="feat-icon">03 · isolation</div>
-        <h3>Isolated Git Worktrees</h3>
-        <p>Manager → Architect → Design → Backend → Frontend each execute in their own git worktree branches, preventing file system and database locks when subagents edit code in parallel.</p>
-        
-        <div class="feat-graphic branch-flow">
-          <div class="branch-line">
-            <span class="branch-badge">feat/api</span>
-            <span class="path">~/.blackide/worktrees/ae3f1/</span>
+        <div class="flow-graphic-container">
+          <div class="flow-nodes">
+            <div class="flow-node active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <div class="flow-node active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="flow-node">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </div>
           </div>
-          <div class="branch-line">
-            <span class="branch-badge" style="background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.2); color: var(--green);">feat/ui</span>
-            <span class="path">~/.blackide/worktrees/c94b2/</span>
+          <div class="flow-files-box">
+            <div class="file-item active">📄 features_plan.md</div>
+            <div class="file-item">📄 family_structure.md</div>
+            <div class="file-item">📄 app_tests.rs</div>
           </div>
         </div>
       </div>
 
-      <!-- 04 Retrieval -->
-      <div class="feat span-3 reveal" style="transition-delay: 100ms;">
-        <div class="feat-icon">04 · retrieval</div>
-        <h3>AST-Aware RAG</h3>
-        <p>Context retrieval parses the Abstract Syntax Tree (AST) to chunk code at class and function boundaries, ensuring semantic searches return complete modules rather than cut-off text blocks.</p>
-        
-        <div class="feat-graphic ast-tree">
-          <span style="color: var(--ink-mute);">// parser: ast chunking</span>
-          <div class="ast-node">class AuthController</div>
-          <div class="ast-node match">└─ function verifyToken()</div>
-          <div class="ast-node">└─ function renewSession()</div>
+      <!-- Card 2 & 3: Split Row -->
+      <div class="feat-card-row split-row">
+        <!-- Card 2: Granular Control -->
+        <div class="feat-card-inner reveal" style="transition-delay: 50ms;">
+          <div class="feat-label">02 · granular control</div>
+          <h3>Granular Control</h3>
+          <p>Utilize a multi-worktree architecture (Manager, Architect, Design) enabling atomic operations. Easily undo per hunk and isolate changes within dedicated Git worktrees for maximum safety and rollback precision.</p>
+          <div class="worktree-graphic">
+            <div class="worktree-box active">
+              <span>Architect Worktree</span>
+              <span class="worktree-dot"></span>
+            </div>
+            <div class="worktree-box" style="opacity: 0.4;">
+              <span>Design Worktree</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Advanced Retrieval -->
+        <div class="feat-card-inner reveal" style="transition-delay: 100ms;">
+          <div class="feat-label">03 · advanced retrieval</div>
+          <h3>Advanced Retrieval</h3>
+          <p>Powered by AST-Aware RAG. Black IDE chunks code intelligently at class and function boundaries, preserving semantic context. The asynchronous event loop ensures the UI never stutters, even during massive codebase indexing.</p>
+          <div class="retrieval-graphic">
+            <div class="search-mock">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <span>Search class Auth...</span>
+            </div>
+            <div class="search-line glow"></div>
+            <div class="search-line" style="opacity: 0.3; width: 75%;"></div>
+          </div>
         </div>
       </div>
 
-      <!-- 05 Zero Telemetry -->
-      <div class="feat span-2 reveal" style="transition-delay: 0ms;">
-        <div class="feat-icon">05 · zero telemetry</div>
-        <h3>Compile-Time Patched</h3>
-        <p>Not disabled by a simple configuration setting — telemetry endpoints are completely stripped from the VSCodium build. Extensions are resolved via the community Open VSX registry.</p>
-        
-        <div class="feat-graphic shield-box">
-          <div class="shield-glow"></div>
-          <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="var(--green)" stroke-width="1.5">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg>
+      <!-- Card 4 & 5: Split Row -->
+      <div class="feat-card-row split-row">
+        <!-- Card 4: Undo Per Hunk -->
+        <div class="feat-card-inner reveal" style="transition-delay: 50ms;">
+          <div class="feat-label">04 · undo per hunk</div>
+          <h3>Undo Per Hunk</h3>
+          <p>Every change is stored as a diff hunk, not a full file snapshot. Revert a single function without touching changes elsewhere in the codebase, preventing code pollution.</p>
+          <div class="diff-graphic">
+            <div class="diff-line del">- old_auth_logic()</div>
+            <div class="diff-line add">+ new_jwt_middleware()</div>
+          </div>
+        </div>
+
+        <!-- Card 5: Editor Inline Chat -->
+        <div class="feat-card-inner reveal" style="transition-delay: 100ms;">
+          <div class="feat-label">05 · inline chat</div>
+          <h3>Editor Inline Chat (Cmd+I)</h3>
+          <p>Stream refactoring and adjustments directly to your cursor inside the text editor. Highlights additions in green decoration and provides inline acceptance controls.</p>
+          <div class="inline-chat-graphic">
+            <div class="inline-chat-line">function parse() {</div>
+            <div class="inline-chat-line added">+   return "refactored_code";</div>
+            <div class="inline-chat-controls">
+              <span class="chat-btn active">Accept</span>
+              <span class="chat-btn">Reject</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 06 Responsiveness -->
-      <div class="feat span-4 reveal" style="transition-delay: 100ms;">
-        <div class="feat-icon">06 · responsiveness</div>
-        <h3>Asynchronous Event Loop</h3>
-        <p>The editor webview and the background agent run on decoupled event loops connected by IPC. Active agent processing or shell tasks will never freeze typing, scrolling, or editor inline chats.</p>
-        
-        <div class="feat-graphic loop-box">
-          <div class="loop-node active">React UI Loop<br><span style="font-size:0.65rem; color:var(--green);">Responsive (0ms lag)</span></div>
-          <div class="loop-conn">IPC EventBus</div>
-          <div class="loop-node">Agent Loop<br><span style="font-size:0.65rem; color:var(--blue);">Processing Tool (3.2s)</span></div>
+      <!-- Card 6 & 7: Split Row -->
+      <div class="feat-card-row split-row">
+        <!-- Card 6: Specialized & Custom Roles -->
+        <div class="feat-card-inner reveal" style="transition-delay: 50ms;">
+          <div class="feat-label">06 · custom roles</div>
+          <h3>Specialized & Custom Roles</h3>
+          <p>Run agents in specialized roles like DevOps, Frontend, or Architect. Configure custom workflows by writing Markdown prompt templates with YAML configuration headers.</p>
+          <div class="modes-config-graphic">
+            <span># .blackide/modes/auditor.md</span>
+            <div>name: Security Auditor</div>
+            <div>tools: [read_file, grep_search]</div>
+          </div>
+        </div>
+
+        <!-- Card 7: Compile-Time Patched -->
+        <div class="feat-card-inner reveal" style="transition-delay: 100ms;">
+          <div class="feat-label">07 · zero telemetry</div>
+          <h3>Compile-Time Patched</h3>
+          <p>Not disabled by a simple configuration setting — telemetry endpoints are completely stripped from the VSCodium build. Extensions are resolved via the community Open VSX registry.</p>
+          <div class="shield-graphic">
+            <div class="shield-halo"></div>
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="var(--green)" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
         </div>
       </div>
+
+      <!-- Card 8: MCP Tool Discovery (Wide) -->
+      <div class="feat-card wide reveal" style="transition-delay: 0ms;">
+        <div class="mcp-graphic">
+          <div class="mcp-connection">
+            <div class="mcp-card">Black IDE</div>
+            <div class="mcp-center-node">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <div class="mcp-card active">External API</div>
+          </div>
+        </div>
+        <div class="feat-content">
+          <div class="feat-label">08 · seamless tool discovery</div>
+          <h2>Seamless Tool Discovery</h2>
+          <p>Built-in MCP Client (Model Context Protocol) integrates effortlessly with your existing infrastructure. Connect directly to external databases, APIs, and cloud services securely, right from the editor.</p>
+        </div>
+      </div>
+
+      <!-- Card 9: Asynchronous Event Loop (Wide) -->
+      <div class="feat-card wide reveal" style="transition-delay: 0ms;">
+        <div class="feat-content">
+          <div class="feat-label">09 · responsiveness</div>
+          <h2>Asynchronous Event Loop</h2>
+          <p>The editor webview and the background agent run on decoupled event loops connected by IPC. Active agent processing or shell tasks will never freeze typing, scrolling, or editor inline chats.</p>
+        </div>
+        <div class="loop-graphic">
+          <div class="loop-flex">
+            <div class="loop-node active">React UI Loop <span class="green-text">(0ms lag)</span></div>
+            <div class="loop-connector">IPC EventBus</div>
+            <div class="loop-node">Agent Loop <span class="blue-text">(3.2s load)</span></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 </main>
 
 <footer>
   <div class="wrap footer-row">
-    <div>Black IDE is an open-source project built on VS Code and VSCodium. Not affiliated with Microsoft.</div>
+    <div>
+      <span style="font-family: var(--font-display); font-weight: 700; color: var(--ink);">Black IDE</span>
+      <p style="margin-top: 0.35rem; font-size: 0.72rem; color: var(--ink-mute);">© 2024 Black IDE. Sovereign Engineering.</p>
+    </div>
     <div class="footer-links">
-      <a href="https://github.com/ornate-source/blackIDE" target="_blank" rel="noopener">Repository</a>
-      <a href="https://github.com/ornate-source/blackIDE/releases" target="_blank" rel="noopener">Releases</a>
+      <a href="#">Privacy</a>
+      <a href="#">Security</a>
+      <a href="#">Open Source</a>
+      <a href="https://github.com/ornate-source/blackIDE" target="_blank" rel="noopener">GitHub</a>
+      <a href="#" target="_blank" rel="noopener">Discord</a>
+      <a href="#" target="_blank" rel="noopener">Twitter</a>
     </div>
   </div>
 </footer>
@@ -321,13 +463,11 @@ async function init() {
 
   if (!assets.length) assets = getFallbackAssets(version);
 
-  document.getElementById('version-badge').textContent = `v${version} · latest release`;
+  document.getElementById('version-badge').textContent = `v${version} Released`;
   const dot = document.getElementById('status-dot');
   const text = document.getElementById('status-text');
   if (live) { text.textContent = isLocal ? 'Release Cache: Active' : 'Live from GitHub releases'; }
   else { dot.classList.add('warn'); text.textContent = 'Offline cache — showing last known links'; }
-
-  
 
   updateCard('macos', assets, [
     ['link-macos-dmg', a => a.name.endsWith('.dmg'), ['meta-macos', a => `Apple Silicon · ${formatSize(a.size)}`]],
@@ -349,10 +489,16 @@ async function init() {
   if (userOS !== 'other') {
     const card = document.getElementById(`card-${userOS}`);
     if (card) card.classList.add('detected');
+
+    // Update Hero primary CTA label dynamically
+    const heroCTA = document.getElementById('hero-primary-cta');
+    if (heroCTA) {
+      if (userOS === 'macos') heroCTA.textContent = 'Download for macOS';
+      else if (userOS === 'windows') heroCTA.textContent = 'Download for Windows';
+      else if (userOS === 'linux') heroCTA.textContent = 'Download for Linux';
+    }
   }
 }
-
-
 
 // Scroll Reveal Observer
 const observer = new IntersectionObserver((entries) => {
