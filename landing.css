@@ -1,0 +1,1875 @@
+/* ==========================================================================
+   Black IDE — Landing page styles
+   Scoped to index.html only. Shared components (header, footer, platform
+   cards, release table) live in style.css and are used by /download too.
+
+   Animation contract
+   ------------------
+   Every looping animation is declared `animation-play-state: paused` and is
+   started by adding `.in-view` to the nearest `[data-animate]` ancestor.
+   landing.js toggles that class from an IntersectionObserver, so off-screen
+   cards cost nothing. Nothing here animates layout-affecting properties —
+   only transform, opacity, filter and clip-path.
+   ========================================================================== */
+
+/* ---------- Landing-scoped tokens ---------- */
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --grid-line: rgba(255, 255, 255, 0.028);
+  --card-bg: linear-gradient(168deg, #101013 0%, #0b0b0d 100%);
+}
+
+.green-text { color: var(--green); }
+.blue-text { color: var(--blue); }
+
+/* ==========================================================================
+   1. Ambient background — drifting grid + aurora
+   ========================================================================== */
+
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-grid {
+  position: absolute;
+  inset: -50%;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  /* Fade the grid out toward the edges so it reads as depth, not wallpaper. */
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, #000 0%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, #000 0%, transparent 78%);
+  animation: grid-drift 60s linear infinite;
+}
+
+@keyframes grid-drift {
+  to { transform: translate3d(56px, 56px, 0); }
+}
+
+.aurora {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.aurora-1 {
+  top: -12%;
+  left: 50%;
+  width: 780px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(241, 184, 63, 0.16) 0%, transparent 68%);
+  animation: aurora-a 22s var(--ease-in-out) infinite;
+}
+
+.aurora-2 {
+  top: 24%;
+  left: 8%;
+  width: 520px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.09) 0%, transparent 70%);
+  animation: aurora-b 28s var(--ease-in-out) infinite;
+}
+
+.aurora-3 {
+  top: 6%;
+  right: 4%;
+  width: 480px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(74, 222, 128, 0.07) 0%, transparent 70%);
+  animation: aurora-c 34s var(--ease-in-out) infinite;
+}
+
+@keyframes aurora-a {
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  50%      { transform: translate(-46%, 5%) scale(1.12); }
+}
+@keyframes aurora-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(9%, -7%) scale(1.15); }
+}
+@keyframes aurora-c {
+  0%, 100% { transform: translate(0, 0) scale(1.08); }
+  50%      { transform: translate(-8%, 8%) scale(1); }
+}
+
+/* ==========================================================================
+   2. Hero
+   ========================================================================== */
+
+.hero {
+  padding: 6.5rem 0 3rem;
+  text-align: center;
+  position: relative;
+}
+
+.hero-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* Staggered entrance. Elements carry --i to offset their delay. */
+.hero-rise {
+  opacity: 0;
+  transform: translateY(22px);
+  animation: hero-rise 0.9s var(--ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+@keyframes hero-rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero .eyebrow {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero .eyebrow::before {
+  animation: dot-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--amber); }
+  50%      { opacity: 0.5; box-shadow: 0 0 12px var(--amber); }
+}
+
+/* Slow specular sweep across the version pill. */
+.hero .eyebrow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.09) 50%, transparent 65%);
+  transform: translateX(-100%);
+  animation: pill-sheen 6s ease-in-out infinite;
+}
+
+@keyframes pill-sheen {
+  0%, 70%, 100% { transform: translateX(-100%); }
+  85%           { transform: translateX(100%); }
+}
+
+.hero h1 {
+  font-size: clamp(2.3rem, 5.4vw, 3.7rem);
+}
+
+.hero h1 em {
+  background: linear-gradient(96deg, #f1b83f 0%, #ffd479 38%, #ff8c00 72%, #f1b83f 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-pan 9s linear infinite;
+}
+
+@keyframes gradient-pan {
+  to { background-position: 250% 50%; }
+}
+
+/* ---------- Hero stat strip ---------- */
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 2.75rem;
+  margin-bottom: 3.25rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.5rem 0;
+}
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-num .unit {
+  color: var(--amber);
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.stat-sep {
+  width: 1px;
+  align-self: stretch;
+  background: linear-gradient(180deg, transparent, var(--line), transparent);
+}
+
+@media (max-width: 640px) {
+  .hero-stats { gap: 0 1.5rem; }
+  .stat-sep { display: none; }
+  .stat-num { font-size: 1.2rem; }
+}
+
+/* CTA shimmer on the primary button */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(241, 184, 63, 0.14) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.7s var(--ease-out);
+}
+
+.btn-primary:hover::after {
+  transform: translateX(100%);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* ==========================================================================
+   3. The IDE demo — scripted, looping product walkthrough
+   ========================================================================== */
+
+.demo-section {
+  padding-bottom: 5.5rem;
+}
+
+.ide {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 40px 80px -24px rgba(0, 0, 0, 0.85),
+    0 0 90px -40px rgba(241, 184, 63, 0.22);
+}
+
+.ide-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 40px;
+  padding: 0 0.9rem;
+  background: #09090b;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.window-dots { display: flex; gap: 6px; }
+
+.window-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.window-dot.red { background: #ff5f56; }
+.window-dot.yellow { background: #ffbd2e; }
+.window-dot.green { background: #27c93f; }
+
+.ide-tabs {
+  display: flex;
+  height: 100%;
+  align-items: stretch;
+}
+
+.ide-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.95rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-mute);
+  border-right: 1px solid var(--line-soft);
+  position: relative;
+  white-space: nowrap;
+}
+
+.ide-tab.active {
+  color: var(--ink);
+  background: var(--panel);
+}
+
+.ide-tab.active::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: var(--amber);
+}
+
+.ide-tab.dirty::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--amber);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.ide-tab.dirty.is-dirty::after { opacity: 1; }
+
+.ide-branch {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--ink-mute);
+}
+
+.ide-body {
+  display: grid;
+  grid-template-columns: 46px 1fr 316px;
+  min-height: 430px;
+}
+
+.ide-rail {
+  background: #09090b;
+  border-right: 1px solid var(--line-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0.9rem;
+  gap: 1.15rem;
+}
+
+.rail-icon {
+  width: 19px;
+  height: 19px;
+  color: var(--ink-mute);
+  transition: color 0.25s;
+  position: relative;
+}
+
+.rail-icon.active { color: var(--amber); }
+
+.rail-icon.active::before {
+  content: '';
+  position: absolute;
+  left: -13px;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--amber);
+}
+
+/* ---------- Editor pane ---------- */
+.ide-editor {
+  background: var(--panel);
+  padding: 1rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.75;
+  overflow: hidden;
+  position: relative;
+}
+
+.code-line {
+  display: flex;
+  padding: 0 1.1rem;
+  white-space: pre;
+  position: relative;
+}
+
+.code-line .ln {
+  width: 26px;
+  flex-shrink: 0;
+  text-align: right;
+  margin-right: 1.1rem;
+  color: #3a3a42;
+  user-select: none;
+}
+
+.code-line .lc { color: var(--ink-dim); }
+
+/* Streamed-in lines start collapsed and expand — height animation is on a
+   fixed line-height so it stays cheap. */
+.code-line.streamed {
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), background-color 0.6s;
+}
+
+.code-line.streamed.shown {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.code-line.added {
+  background: rgba(74, 222, 128, 0.1);
+  box-shadow: inset 2px 0 0 var(--green);
+}
+
+.code-line.added .lc { color: #86efac; }
+
+.code-line.removed {
+  background: rgba(244, 113, 116, 0.09);
+  box-shadow: inset 2px 0 0 var(--red);
+}
+
+.code-line.removed .lc {
+  color: #fca5a5;
+  text-decoration: line-through;
+  text-decoration-color: rgba(244, 113, 116, 0.5);
+}
+
+.k { color: #f1b83f; }
+.f { color: #61afef; }
+.t { color: #e5c07b; }
+.s { color: #98c379; }
+.c { color: #4b4b55; font-style: italic; }
+.p { color: #8b8b96; }
+
+.caret {
+  display: inline-block;
+  width: 7px;
+  height: 1.05em;
+  background: var(--amber);
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  animation: caret-blink 1.05s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Inline checkpoint toast inside the editor */
+.checkpoint-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translate(-50%, 14px);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(13, 13, 15, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 0.4rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--ink-dim);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.4s, transform 0.4s var(--ease-out);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.checkpoint-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.checkpoint-toast .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+
+.checkpoint-toast .undo { color: var(--amber); }
+
+/* ---------- Agent panel ---------- */
+.ide-agent {
+  background: #0a0a0c;
+  border-left: 1px solid var(--line-soft);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.agent-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--line-soft);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-dim);
+}
+
+.agent-mode {
+  margin-left: auto;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.6rem;
+  color: var(--amber);
+  background: rgba(241, 184, 63, 0.06);
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.agent-mode.exec {
+  color: var(--green);
+  border-color: rgba(74, 222, 128, 0.4);
+  background: rgba(74, 222, 128, 0.06);
+}
+
+.agent-stream {
+  flex: 1;
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  overflow: hidden;
+}
+
+.agent-msg {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+
+.agent-msg.shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.agent-msg.user {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px 8px 8px 2px;
+  padding: 0.55rem 0.7rem;
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+/* Tool-call rows: spinner that resolves into a check */
+.tool-call {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-mute);
+}
+
+.tool-call .glyph {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  border-top-color: var(--amber);
+  animation: spin 0.75s linear infinite;
+}
+
+.tool-call.done .glyph {
+  animation: none;
+  border: none;
+  background: rgba(74, 222, 128, 0.14);
+  position: relative;
+}
+
+.tool-call.done .glyph::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1.5px;
+  width: 3px;
+  height: 6px;
+  border: solid var(--green);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.tool-call.done { color: var(--ink-dim); }
+
+.tool-call .arg { color: #61afef; }
+
+/* Plan approval card */
+.plan-card {
+  border: 1px solid rgba(241, 184, 63, 0.32);
+  background: linear-gradient(180deg, rgba(241, 184, 63, 0.06), rgba(241, 184, 63, 0.01));
+  border-radius: 9px;
+  padding: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plan-title {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.plan-artifacts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--ink-dim);
+}
+
+.plan-artifacts span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.plan-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.plan-btn {
+  flex: 1 1 0;          /* basis 0 so both buttons match regardless of label length */
+  text-align: center;
+  font-size: 0.63rem;
+  font-weight: 600;
+  padding: 0.32rem;
+  border-radius: 5px;
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-btn.approve {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #111;
+}
+
+/* Ripple that fires when the script "clicks" approve */
+.plan-btn.approve.clicked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple 0.55s var(--ease-out) forwards;
+}
+
+@keyframes ripple {
+  to { transform: translate(-50%, -50%) scale(14); opacity: 0; }
+}
+
+/* Progress bar for the execution phase */
+.agent-progress {
+  height: 2px;
+  background: var(--line-soft);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.agent-progress i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--amber), var(--green));
+  transition: width 0.6s linear;
+}
+
+@media (max-width: 900px) {
+  .ide-body {
+    grid-template-columns: 46px 1fr;
+    min-height: 380px;
+  }
+  .ide-agent { display: none; }
+}
+
+@media (max-width: 560px) {
+  /* Rail and agent panel are both gone by here, so the editor is the whole
+     frame — shrink it to fit the code rather than leaving dead space. */
+  .ide-body {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .ide-rail { display: none; }
+  .ide-editor { min-height: 250px; font-size: 0.68rem; }
+}
+
+/* ==========================================================================
+   4. Section headers
+   ========================================================================== */
+
+.section-head {
+  max-width: 620px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.section-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.6vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 0.7rem 0 0.8rem;
+  color: var(--ink);
+}
+
+.section-head p {
+  color: var(--ink-dim);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+/* ==========================================================================
+   5. Feature bento grid
+   ========================================================================== */
+
+.features {
+  padding: 5.5rem 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.25rem;
+}
+
+.feat {
+  grid-column: span 2;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.35s, transform 0.35s var(--ease-out), box-shadow 0.35s;
+}
+
+.feat.span-3 { grid-column: span 3; }
+.feat.span-6 {
+  grid-column: span 6;
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 2.75rem;
+  align-items: center;
+  padding: 2.5rem;
+}
+
+.feat.span-6.flip .feat-body { order: 2; }
+
+.feat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.feat:hover {
+  border-color: rgba(241, 184, 63, 0.28);
+  transform: translateY(-3px);
+  box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.7);
+}
+
+/* Cursor-tracked glow. landing.js writes --mx/--my on pointer move. */
+.feat::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), rgba(241, 184, 63, 0.07), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+.feat:hover::before { opacity: 1; }
+
+.feat-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--amber);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+
+.feat h3 {
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.feat.span-6 h3 {
+  font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+  letter-spacing: -0.025em;
+}
+
+.feat p {
+  color: var(--ink-dim);
+  font-size: 0.855rem;
+  line-height: 1.65;
+}
+
+.feat-note {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-mute);
+  border-top: 1px solid var(--line-soft);
+  padding-top: 0.6rem;
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 950px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .feat, .feat.span-3 { grid-column: span 1; }
+  .feat.span-6 {
+    grid-column: span 2;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .feat.span-6.flip .feat-body { order: 0; }
+}
+
+@media (max-width: 640px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .feat, .feat.span-3, .feat.span-6 { grid-column: span 1; }
+  .feat { padding: 1.6rem; }
+}
+
+/* ---------- Shared stage chrome for feature graphics ---------- */
+.stage {
+  background: #08080a;
+  border: 1px solid var(--line-soft);
+  border-radius: 9px;
+  padding: 1.1rem;
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.feat.span-6 .stage {
+  margin-top: 0;
+  padding: 1.6rem;
+  min-height: 210px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   6. Per-feature animations
+   All keyframed loops are paused until `.in-view` lands on the card.
+   ========================================================================== */
+
+/* Gated on .js: several of these animations start from an invisible keyframe,
+   so pausing them without a script to un-pause would leave empty stages. With
+   no JS the loops simply run unattended, which degrades cleanly. */
+.js [data-animate] .anim {
+  animation-play-state: paused;
+}
+
+.js [data-animate].in-view .anim {
+  animation-play-state: running;
+}
+
+/* ---- 01 · Plan → Approve → Run --------------------------------------- */
+.flow {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.flow-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 0 4px;
+}
+
+/* Rail + the amber fill that sweeps along it */
+.flow-track::before,
+.flow-track::after {
+  content: '';
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.flow-track::before { background: var(--line); }
+
+.flow-track::after {
+  background: linear-gradient(90deg, var(--amber), var(--green));
+  transform-origin: left center;
+  transform: translateY(-50%) scaleX(0);
+  animation: flow-fill 6s var(--ease-in-out) infinite;
+}
+
+@keyframes flow-fill {
+  0%, 8%    { transform: translateY(-50%) scaleX(0); }
+  36%       { transform: translateY(-50%) scaleX(0.5); }
+  64%, 92%  { transform: translateY(-50%) scaleX(1); }
+  100%      { transform: translateY(-50%) scaleX(0); }
+}
+
+.flow-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.flow-dot {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-mute);
+}
+
+.flow-dot svg { width: 15px; height: 15px; }
+
+.flow-step .cap {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+
+/* Each step lights up in sequence across the 6s cycle. */
+.flow-step .flow-dot {
+  animation: flow-light 6s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 1.55s);
+}
+
+@keyframes flow-light {
+  0%, 4%   { border-color: var(--line); color: var(--ink-mute); background: var(--panel); box-shadow: none; }
+  10%, 88% {
+    border-color: var(--amber);
+    color: var(--amber);
+    background: rgba(241, 184, 63, 0.09);
+    box-shadow: 0 0 16px -2px rgba(241, 184, 63, 0.4);
+  }
+  100%     { border-color: var(--line); color: var(--ink-mute); background: var(--panel); box-shadow: none; }
+}
+
+.flow-artifacts {
+  background: var(--panel-2);
+  border: 1px solid var(--line-soft);
+  border-radius: 7px;
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--ink-mute);
+}
+
+.artifact {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  animation: artifact-check 6s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.7s);
+}
+
+@keyframes artifact-check {
+  0%, 14%  { color: var(--ink-mute); }
+  26%, 92% { color: var(--green); }
+  100%     { color: var(--ink-mute); }
+}
+
+.artifact .box {
+  width: 11px;
+  height: 11px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.artifact .box::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0.5px;
+  width: 3px;
+  height: 6px;
+  border: solid currentColor;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg) scale(0);
+  transform-origin: center;
+  animation: check-pop 6s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.7s);
+}
+
+@keyframes check-pop {
+  0%, 16%  { transform: rotate(45deg) scale(0); }
+  24%, 92% { transform: rotate(45deg) scale(1); }
+  100%     { transform: rotate(45deg) scale(0); }
+}
+
+/* ---- 02 · Checkpoints / reverse-hunk undo ---------------------------- */
+.hunks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+
+.hunk {
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hunk.del {
+  background: rgba(244, 113, 116, 0.09);
+  color: var(--red);
+}
+
+.hunk.add {
+  background: rgba(74, 222, 128, 0.09);
+  color: var(--green);
+}
+
+/* A wipe reveals each hunk, then the restore sweep pulls them back. */
+.hunk::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #08080a;
+  transform-origin: right center;
+  animation: hunk-wipe 5.5s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.45s);
+}
+
+@keyframes hunk-wipe {
+  0%, 6%   { transform: scaleX(1); }
+  22%, 66% { transform: scaleX(0); }
+  82%,100% { transform: scaleX(1); }
+}
+
+.restore-bar {
+  margin-top: 0.55rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--ink-mute);
+}
+
+.restore-bar .rev {
+  color: var(--amber);
+  border: 1px solid rgba(241, 184, 63, 0.35);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  animation: rev-flash 5.5s var(--ease-in-out) infinite;
+}
+
+@keyframes rev-flash {
+  0%, 66%   { background: transparent; }
+  72%, 80%  { background: rgba(241, 184, 63, 0.22); }
+  86%, 100% { background: transparent; }
+}
+
+/* ---- 03 · AST-aware retrieval ---------------------------------------- */
+.rag {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.rag-query {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-dim);
+}
+
+.rag-query svg { color: var(--ink-mute); flex-shrink: 0; }
+
+/* Typewriter: a fixed-width mask sweeps open over the query text. */
+.rag-query .typed {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 1px solid var(--amber);
+  animation:
+    type-out 5.5s steps(24) infinite,
+    caret-blink 0.9s steps(1) infinite;
+  max-width: 100%;
+}
+
+@keyframes type-out {
+  0%       { width: 0; }
+  40%, 88% { width: 15.5ch; }
+  100%     { width: 0; }
+}
+
+.rag-hit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--ink-mute);
+  opacity: 0;
+  animation: hit-in 5.5s var(--ease-out) infinite;
+  animation-delay: calc(2.1s + var(--step) * 0.35s);
+}
+
+@keyframes hit-in {
+  0%       { opacity: 0; transform: translateY(5px); }
+  12%, 78% { opacity: 1; transform: translateY(0); }
+  92%,100% { opacity: 0; transform: translateY(0); }
+}
+
+.rag-hit .score {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--amber), rgba(241, 184, 63, 0.15));
+  flex-shrink: 0;
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: score-grow 5.5s var(--ease-out) infinite;
+  animation-delay: calc(2.1s + var(--step) * 0.35s);
+}
+
+@keyframes score-grow {
+  0%       { transform: scaleX(0); }
+  16%, 82% { transform: scaleX(1); }
+  95%,100% { transform: scaleX(0); }
+}
+
+.rag-hit .name { color: var(--ink-dim); }
+
+/* ---- 04 · Git worktree isolation ------------------------------------- */
+.worktree {
+  position: relative;
+  width: 100%;
+  height: 132px;
+}
+
+.wt-svg { width: 100%; height: 100%; overflow: visible; }
+
+.wt-trunk,
+.wt-branch {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.wt-trunk { stroke: var(--line); }
+
+.wt-branch {
+  stroke: var(--amber);
+  /* Must exceed the longest branch path (~360 units) or the draw stops short. */
+  stroke-dasharray: 420;
+  stroke-dashoffset: 420;
+  opacity: 0.55;
+  animation: branch-draw 7s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.25s);
+}
+
+@keyframes branch-draw {
+  0%       { stroke-dashoffset: 420; }
+  22%, 62% { stroke-dashoffset: 0; }
+  84%,100% { stroke-dashoffset: 420; }
+}
+
+/* Commit node travelling down each isolated branch */
+.wt-node {
+  fill: var(--amber);
+  opacity: 0;
+  animation: node-travel 7s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.25s);
+}
+
+/* Travel distance matches the straight run of each branch in the viewBox
+   (x=170 → x=300), so the node lands exactly on the merge curve. */
+@keyframes node-travel {
+  0%, 20%  { opacity: 0; transform: translateX(0); }
+  30%      { opacity: 1; }
+  62%      { opacity: 1; transform: translateX(130px); }
+  72%,100% { opacity: 0; transform: translateX(130px); }
+}
+
+.wt-label {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  fill: var(--ink-mute);
+}
+
+.wt-merge {
+  fill: var(--green);
+  opacity: 0;
+  animation: merge-pop 7s var(--ease-out) infinite;
+}
+
+@keyframes merge-pop {
+  0%, 64%  { opacity: 0; transform: scale(0.2); }
+  74%, 92% { opacity: 1; transform: scale(1); }
+  100%     { opacity: 0; transform: scale(0.2); }
+}
+
+/* ---- 05 · Inline chat (Cmd+I) ---------------------------------------- */
+.inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+
+.inline-prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--panel);
+  border: 1px solid rgba(241, 184, 63, 0.3);
+  border-radius: 5px;
+  padding: 0.32rem 0.5rem;
+  color: var(--ink-dim);
+  font-size: 0.63rem;
+}
+
+.inline-prompt .kbd {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0 0.25rem;
+  color: var(--ink-mute);
+  font-size: 0.58rem;
+}
+
+.inline-prompt .typed {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: type-inline 6.5s steps(20) infinite;
+}
+
+@keyframes type-inline {
+  0%       { width: 0; }
+  30%, 90% { width: 13ch; }
+  100%     { width: 0; }
+}
+
+.inline-code {
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
+  color: var(--ink-dim);
+}
+
+.inline-code.gen {
+  background: rgba(74, 222, 128, 0.1);
+  box-shadow: inset 2px 0 0 var(--green);
+  color: var(--green);
+  overflow: hidden;
+  white-space: nowrap;
+  animation: type-gen 6.5s steps(26) infinite;
+}
+
+@keyframes type-gen {
+  0%, 34%  { width: 0; opacity: 0; }
+  36%      { opacity: 1; }
+  58%, 90% { width: 22ch; opacity: 1; }
+  100%     { width: 0; opacity: 0; }
+}
+
+.inline-actions {
+  display: flex;
+  gap: 0.3rem;
+  justify-content: flex-end;
+  opacity: 0;
+  animation: fade-late 6.5s var(--ease-out) infinite;
+}
+
+@keyframes fade-late {
+  0%, 58%  { opacity: 0; transform: translateY(3px); }
+  66%, 90% { opacity: 1; transform: translateY(0); }
+  100%     { opacity: 0; transform: translateY(0); }
+}
+
+.inline-actions span {
+  font-size: 0.58rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1rem 0.38rem;
+  color: var(--ink-mute);
+}
+
+.inline-actions span.ok {
+  border-color: rgba(74, 222, 128, 0.4);
+  color: var(--green);
+  background: rgba(74, 222, 128, 0.07);
+}
+
+/* ---- 06 · Agent modes carousel --------------------------------------- */
+.modes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.mode-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 0.18rem 0.5rem;
+  color: var(--ink-mute);
+  transition: color 0.35s, border-color 0.35s, background-color 0.35s;
+}
+
+.chip.on {
+  color: var(--amber);
+  border-color: rgba(241, 184, 63, 0.45);
+  background: rgba(241, 184, 63, 0.09);
+}
+
+.mode-config {
+  background: var(--panel-2);
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  padding: 0.55rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  line-height: 1.75;
+  color: var(--ink-dim);
+  min-height: 84px;
+}
+
+.mode-config .key { color: #61afef; }
+.mode-config .cmt { color: var(--ink-mute); font-style: italic; }
+
+.mode-config > div {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+.mode-config.swap > div { opacity: 1; transform: translateY(0); }
+.mode-config.swap > div:nth-child(1) { transition-delay: 0ms; }
+.mode-config.swap > div:nth-child(2) { transition-delay: 60ms; }
+.mode-config.swap > div:nth-child(3) { transition-delay: 120ms; }
+.mode-config.swap > div:nth-child(4) { transition-delay: 180ms; }
+
+/* ---- 07 · Zero telemetry shield -------------------------------------- */
+.shield-stage {
+  height: 132px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.shield-core {
+  position: relative;
+  z-index: 3;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
+}
+
+.shield-core svg {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.5));
+}
+
+/* Expanding rings = the deflection boundary */
+.shield-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  border-radius: 50%;
+  opacity: 0;
+  animation: ring-out 3.2s var(--ease-out) infinite;
+  animation-delay: calc(var(--step) * 1.07s);
+}
+
+@keyframes ring-out {
+  0%   { transform: scale(0.85); opacity: 0.7; }
+  100% { transform: scale(2.7); opacity: 0; }
+}
+
+/* Telemetry packets fly in and vaporise on contact */
+.packet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--red);
+  border: 1px solid rgba(244, 113, 116, 0.35);
+  background: rgba(244, 113, 116, 0.08);
+  border-radius: 3px;
+  padding: 0.05rem 0.3rem;
+  white-space: nowrap;
+  opacity: 0;
+  animation: packet-block 4.2s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.85s);
+}
+
+@keyframes packet-block {
+  0%   { opacity: 0; transform: translate(var(--fx), var(--fy)) scale(0.9); }
+  18%  { opacity: 1; }
+  55%  { opacity: 1; transform: translate(calc(var(--fx) * 0.28), calc(var(--fy) * 0.28)) scale(1); }
+  70%  { opacity: 0; transform: translate(calc(var(--fx) * 0.24), calc(var(--fy) * 0.24)) scale(1.5); filter: blur(3px); }
+  100% { opacity: 0; transform: translate(calc(var(--fx) * 0.24), calc(var(--fy) * 0.24)) scale(1.5); filter: blur(3px); }
+}
+
+.telemetry-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--ink-mute);
+  margin-top: 0.5rem;
+}
+
+.telemetry-count b { color: var(--green); }
+
+/* ---- 08 · MCP tool discovery ----------------------------------------- */
+.mcp {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mcp-bus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  gap: 0.75rem;
+}
+
+.mcp-hub {
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--amber);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  color: var(--amber);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  box-shadow: 0 0 22px -6px rgba(241, 184, 63, 0.5);
+  position: relative;
+  z-index: 2;
+}
+
+.mcp-hub svg { width: 16px; height: 16px; }
+
+.mcp-servers {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  position: relative;
+  z-index: 2;
+}
+
+.mcp-server {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--ink-dim);
+  position: relative;
+  overflow: hidden;
+  animation: server-connect 5s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.5s);
+}
+
+@keyframes server-connect {
+  0%, 10%  { border-color: var(--line); }
+  24%, 88% { border-color: rgba(74, 222, 128, 0.35); }
+  100%     { border-color: var(--line); }
+}
+
+.mcp-server .led {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink-mute);
+  flex-shrink: 0;
+  animation: led-on 5s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.5s);
+}
+
+@keyframes led-on {
+  0%, 10%  { background: var(--ink-mute); box-shadow: none; }
+  24%, 88% { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  100%     { background: var(--ink-mute); box-shadow: none; }
+}
+
+.mcp-server .tools {
+  margin-left: auto;
+  color: var(--ink-mute);
+  font-size: 0.58rem;
+  opacity: 0;
+  animation: fade-mid 5s var(--ease-out) infinite;
+  animation-delay: calc(var(--step) * 0.5s);
+}
+
+@keyframes fade-mid {
+  0%, 24%  { opacity: 0; }
+  40%, 88% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+/* Data pulse travelling hub → server */
+.mcp-wire {
+  position: absolute;
+  left: 62px;
+  right: 0;
+  height: 1px;
+  background: var(--line);
+  z-index: 1;
+}
+
+.mcp-pulse {
+  position: absolute;
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--amber));
+  animation: pulse-run 2.2s linear infinite;
+  animation-delay: calc(var(--step) * 0.55s);
+}
+
+@keyframes pulse-run {
+  0%   { left: 0; opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { left: calc(100% - 22px); opacity: 0; }
+}
+
+/* ---- 09 · Decoupled event loops -------------------------------------- */
+.loops {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.loop-ring {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  flex-shrink: 0;
+}
+
+.loop-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.loop-ring .track {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 3;
+}
+
+.loop-ring .arc {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 60 194;
+}
+
+/* Two rings, deliberately different speeds — that's the whole point:
+   a slow agent loop cannot stall the fast UI loop. */
+.loop-ring.ui .arc {
+  stroke: var(--green);
+  animation: ring-spin 1.15s linear infinite;
+}
+
+.loop-ring.agent .arc {
+  stroke: var(--blue);
+  animation: ring-spin 4.2s linear infinite;
+}
+
+@keyframes ring-spin {
+  to { stroke-dashoffset: -254; }
+}
+
+.loop-ring .center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+.loop-ring .center b {
+  font-size: 0.78rem;
+  color: var(--ink);
+}
+
+.loop-ring .center span {
+  font-size: 0.55rem;
+  color: var(--ink-mute);
+}
+
+.loop-bridge {
+  flex: 1;
+  max-width: 150px;
+  position: relative;
+  height: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.loop-bridge .wire {
+  width: 100%;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px);
+  position: relative;
+}
+
+.loop-bridge .cap {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  color: var(--ink-mute);
+}
+
+/* IPC messages ping-ponging across the bridge */
+.ipc {
+  position: absolute;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 6px var(--amber);
+  animation: ipc-run 2.6s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.65s);
+}
+
+@keyframes ipc-run {
+  0%   { left: 0; opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { left: calc(100% - 5px); opacity: 1; }
+  60%  { left: calc(100% - 5px); opacity: 0; }
+  100% { left: 0; opacity: 0; }
+}
+
+@media (max-width: 640px) {
+  .loops { gap: 0.75rem; }
+  .loop-ring { width: 68px; height: 68px; }
+}
+
+/* ==========================================================================
+   7. Pipeline strip (build & distribution)
+   ========================================================================== */
+
+.pipeline {
+  padding: 5rem 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+.pipe-track {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+  position: relative;
+}
+
+.pipe-step {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 1rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Travelling highlight that walks the pipeline left → right */
+.pipe-step::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(241, 184, 63, 0.1), transparent);
+  opacity: 0;
+  animation: pipe-walk 6s var(--ease-in-out) infinite;
+  animation-delay: calc(var(--step) * 0.55s);
+}
+
+@keyframes pipe-walk {
+  0%, 4%   { opacity: 0; }
+  10%, 22% { opacity: 1; }
+  32%,100% { opacity: 0; }
+}
+
+.pipe-step .n {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--amber);
+}
+
+.pipe-step h4 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.pipe-step p {
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .pipe-track { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 520px) {
+  .pipe-track { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   8. Misc
+   ========================================================================== */
+
+.matrix-toggle {
+  margin-top: 2rem;
+  text-decoration: none;
+}
+
+.matrix-toggle svg {
+  transition: transform 0.3s var(--ease-out);
+}
+
+.matrix-toggle:hover svg {
+  transform: translateY(2px);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* When the user opts out of motion, freeze every loop at a legible frame
+   rather than mid-transition. The global reduce block in style.css collapses
+   durations; this pins the visual state that reads best when static. */
+@media (prefers-reduced-motion: reduce) {
+  .flow-track::after { transform: translateY(-50%) scaleX(1); }
+  .flow-step .flow-dot {
+    border-color: var(--amber);
+    color: var(--amber);
+    background: rgba(241, 184, 63, 0.09);
+  }
+  .artifact { color: var(--green); }
+  .artifact .box::after { transform: rotate(45deg) scale(1); }
+  .hunk::after { display: none; }
+  .rag-query .typed { width: auto; border-right: none; }
+  .rag-hit { opacity: 1; }
+  .rag-hit .score { transform: scaleX(1); }
+  .wt-branch { stroke-dashoffset: 0; }
+  .wt-node, .wt-merge { opacity: 1; }
+  .inline-prompt .typed,
+  .inline-code.gen { width: auto; opacity: 1; }
+  .inline-actions { opacity: 1; }
+  .mcp-server .tools { opacity: 1; }
+  .mcp-server .led { background: var(--green); }
+  .packet { opacity: 1; transform: translate(var(--fx), var(--fy)); }
+  .shield-ring { opacity: 0.4; }
+  .pipe-step::after { opacity: 0; }
+  .caret { opacity: 1; }
+}

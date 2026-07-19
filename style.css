@@ -49,10 +49,16 @@ body {
   overflow-x: hidden;
 }
 
-/* Deep background ambient glow */
+/*
+ * Deep background ambient glow.
+ * Must stay `fixed`, not `absolute`: `overflow-x: hidden` on body propagates to
+ * the viewport, which leaves body itself non-clipping, so an absolutely
+ * positioned 1000px-wide child overflows the scroll area and produces a
+ * horizontal scrollbar on narrow screens. Fixed elements don't extend it.
+ */
 body::before {
   content: '';
-  position: absolute;
+  position: fixed;
   top: -10%;
   left: 50%;
   transform: translateX(-50%);
@@ -105,6 +111,66 @@ a {
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ---------- Accessibility Primitives ---------- */
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 200;
+  background: var(--amber);
+  color: #0a0a0b;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-sm);
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+/*
+ * Motion is decorative throughout this site — every animation either loops
+ * ambiently or illustrates a feature that is also described in text. Users who
+ * opt out lose nothing but movement, so we hard-stop all of it.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ---------- Header & Navigation ---------- */
@@ -321,638 +387,6 @@ h1 em {
   background: rgba(255, 255, 255, 0.01);
 }
 
-/* ---------- Split Editor Mock ---------- */
-.editor-frame {
-  max-width: 900px;
-  margin: 0 auto 5.5rem;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
-}
-
-.editor-header {
-  display: flex;
-  align-items: center;
-  background: #09090b;
-  border-bottom: 1px solid var(--line-soft);
-  height: 38px;
-  padding: 0 1rem;
-  justify-content: space-between;
-}
-
-.window-dots {
-  display: flex;
-  gap: 6px;
-}
-
-.window-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-}
-.window-dot.red { background: #ff5f56; }
-.window-dot.yellow { background: #ffbd2e; }
-.window-dot.green { background: #27c93f; }
-
-.editor-tabs {
-  display: flex;
-  margin-left: 2rem;
-  height: 100%;
-}
-
-.tab {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--ink-mute);
-  padding: 0 1.2rem;
-  border-right: 1px solid var(--line-soft);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  height: 100%;
-  cursor: pointer;
-}
-
-.tab.active {
-  color: var(--ink);
-  background: var(--panel);
-}
-
-.tab-icon {
-  font-size: 0.75rem;
-  display: flex;
-  align-items: center;
-}
-
-.tab-icon.rust { color: #de5f35; }
-.tab-icon.cog { color: var(--ink-dim); }
-
-.editor-layout {
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  min-height: 350px;
-}
-
-.editor-sidebar {
-  background: #09090b;
-  border-right: 1px solid var(--line-soft);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 1rem;
-  gap: 1.25rem;
-}
-
-.sidebar-icon {
-  width: 20px;
-  height: 20px;
-  color: var(--ink-mute);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.sidebar-icon:hover, .sidebar-icon.active {
-  color: var(--ink-dim);
-}
-
-.editor-workspace {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background: var(--panel);
-}
-
-@media (max-width: 768px) {
-  .editor-workspace {
-    grid-template-columns: 1fr;
-  }
-  .editor-pane.right-pane {
-    display: none;
-  }
-}
-
-.editor-pane {
-  padding: 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  line-height: 1.7;
-  overflow: auto;
-}
-
-.editor-pane.left-pane {
-  border-right: 1px solid var(--line-soft);
-}
-
-.editor-pane pre {
-  white-space: pre-wrap;
-}
-
-.code-gutter {
-  color: var(--ink-mute);
-  display: inline-block;
-  width: 24px;
-  text-align: right;
-  margin-right: 1rem;
-  user-select: none;
-}
-
-.code-content {
-  color: var(--ink-dim);
-}
-
-.code-keyword { color: #f1b83f; }
-.code-fn { color: #61afef; }
-.code-type { color: #e5c07b; }
-.code-comment { color: var(--ink-mute); font-style: italic; }
-
-.editor-pane.right-pane {
-  background: linear-gradient(135deg, rgba(25, 25, 29, 0.5) 0%, rgba(13, 13, 15, 0.9) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-/* Transparent code block layout graphic for right-pane */
-.right-pane-graphic {
-  width: 80%;
-  opacity: 0.15;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.graphic-line {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--ink);
-}
-
-.graphic-line.short { width: 40%; }
-.graphic-line.med { width: 70%; }
-.graphic-line.long { width: 90%; }
-
-/* ---------- Custom Bento Grid Features ---------- */
-.features {
-  padding: 5.5rem 0;
-  border-top: 1px solid var(--line-soft);
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-.feat-card {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 2.5rem;
-  overflow: hidden;
-  transition: var(--transition);
-}
-
-.feat-card:hover {
-  border-color: rgba(241, 184, 63, 0.2);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-}
-
-.feat-card.wide {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 3.5rem;
-  align-items: center;
-}
-
-.feat-card-row.split-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
-@media (max-width: 900px) {
-  .feat-card.wide {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-  .feat-card-row.split-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-.feat-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.feat-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--amber);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.feat-card-inner {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 2.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  height: 100%;
-  transition: var(--transition);
-}
-
-.feat-card-inner:hover {
-  border-color: rgba(241, 184, 63, 0.2);
-  box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
-}
-
-.feat-card h2, .feat-card-inner h3 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--ink);
-}
-
-.feat-card h2 {
-  font-size: clamp(1.4rem, 3vw, 1.8rem);
-  letter-spacing: -0.02em;
-}
-
-.feat-card-inner h3 {
-  font-size: 1.2rem;
-  letter-spacing: -0.01em;
-}
-
-.feat-card p, .feat-card-inner p {
-  color: var(--ink-dim);
-  font-size: 0.88rem;
-  line-height: 1.6;
-}
-
-/* Feature Graphic Container base styles */
-.flow-graphic-container, 
-.worktree-graphic, 
-.retrieval-graphic, 
-.mcp-graphic, 
-.diff-graphic, 
-.inline-chat-graphic, 
-.modes-config-graphic, 
-.shield-graphic, 
-.loop-graphic {
-  background: #09090b;
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-sm);
-  padding: 1.25rem;
-  margin-top: 1rem;
-}
-
-/* Feature 01 Graphic: Plan Approve Run Flow */
-.flow-nodes {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  margin-bottom: 1.25rem;
-}
-
-.flow-nodes::after {
-  content: '';
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  height: 1px;
-  background: var(--line);
-  z-index: 1;
-}
-
-.flow-node {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  position: relative;
-  transition: var(--transition);
-}
-
-.flow-node.active {
-  border-color: var(--amber);
-  background: rgba(241, 184, 63, 0.08);
-  box-shadow: 0 0 10px rgba(241, 184, 63, 0.1);
-}
-
-.flow-node svg {
-  width: 16px;
-  height: 16px;
-  color: var(--ink-mute);
-}
-
-.flow-node.active svg {
-  color: var(--amber);
-}
-
-.flow-files-box {
-  background: var(--panel-2);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-sm);
-  padding: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  color: var(--ink-dim);
-}
-
-.file-item {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.file-item.active {
-  color: var(--amber);
-}
-
-/* Feature 02 Graphic: Granular Control Worktrees */
-.worktree-graphic {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: auto;
-}
-
-.worktree-box {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  padding: 0.5rem 0.75rem;
-  color: var(--ink-dim);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-}
-
-.worktree-box.active {
-  border-color: var(--amber);
-  color: var(--ink);
-  box-shadow: 0 0 8px rgba(241, 184, 63, 0.05);
-}
-
-.worktree-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--amber);
-}
-
-/* Feature 03 Graphic: Advanced Retrieval */
-.retrieval-graphic {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  margin-top: auto;
-}
-
-.search-mock {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  padding: 0.45rem 0.65rem;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--ink-mute);
-}
-
-.search-mock svg {
-  color: var(--ink-mute);
-}
-
-.search-line {
-  height: 4px;
-  background: var(--line);
-  border-radius: 2px;
-  width: 100%;
-}
-.search-line.glow {
-  background: linear-gradient(90deg, var(--amber) 0%, transparent 60%);
-}
-
-/* Feature 04 Graphic: Hunk Diffs */
-.diff-graphic {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  margin-top: auto;
-}
-
-.diff-line {
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-}
-
-.diff-line.del {
-  background: rgba(244, 113, 116, 0.08);
-  color: var(--red);
-}
-
-.diff-line.add {
-  background: rgba(74, 222, 128, 0.08);
-  color: var(--green);
-}
-
-/* Feature 05 Graphic: Editor Inline Chat */
-.inline-chat-graphic {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  margin-top: auto;
-}
-
-.inline-chat-line {
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  color: var(--ink-dim);
-}
-
-.inline-chat-line.added {
-  background: rgba(74, 222, 128, 0.08);
-  color: var(--green);
-  border-left: 2px solid var(--green);
-}
-
-.inline-chat-controls {
-  display: flex;
-  gap: 0.35rem;
-  justify-content: flex-end;
-  margin-top: 0.25rem;
-}
-
-.chat-btn {
-  font-size: 0.62rem;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 0.15rem 0.4rem;
-  color: var(--ink-mute);
-  cursor: pointer;
-}
-
-.chat-btn.active {
-  border-color: var(--amber);
-  color: var(--amber);
-  background: rgba(241, 184, 63, 0.05);
-}
-
-/* Feature 06 Graphic: Custom Modes */
-.modes-config-graphic {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  margin-top: auto;
-  color: var(--ink-dim);
-}
-
-.modes-config-graphic span {
-  color: var(--ink-mute);
-}
-
-/* Feature 07 Graphic: Zero Telemetry Shield */
-.shield-graphic {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90px;
-  position: relative;
-  margin-top: auto;
-}
-
-.shield-halo {
-  position: absolute;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(74, 222, 128, 0.1) 0%, transparent 70%);
-}
-
-/* Feature 08 Graphic: MCP Client */
-.mcp-graphic {
-  padding: 1.75rem;
-}
-
-.mcp-connection {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  position: relative;
-}
-
-.mcp-connection::after {
-  content: '';
-  position: absolute;
-  left: 20%;
-  right: 20%;
-  height: 1px;
-  background: var(--line);
-  border-top: 1px dashed var(--line);
-  z-index: 1;
-}
-
-.mcp-card {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  padding: 0.55rem 0.9rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--ink-dim);
-  z-index: 2;
-  text-align: center;
-}
-
-.mcp-card.active {
-  border-color: var(--amber);
-  color: var(--ink);
-  box-shadow: 0 0 12px rgba(241, 184, 63, 0.08);
-}
-
-.mcp-center-node {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--panel-2);
-  border: 1px solid var(--amber);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  color: var(--amber);
-  box-shadow: 0 0 8px rgba(241, 184, 63, 0.2);
-}
-
-/* Feature 09 Graphic: Event Loop */
-.loop-graphic {
-  padding: 1rem;
-}
-
-.loop-flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.loop-node {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  padding: 0.55rem 0.85rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  text-align: center;
-  color: var(--ink-dim);
-}
-
-.loop-node.active {
-  border-color: var(--amber);
-  color: var(--ink);
-}
-
-.loop-connector {
-  flex: 1;
-  border-top: 1px dashed var(--line);
-  margin: 0 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--ink-mute);
-  text-align: center;
-}
-
-.green-text { color: var(--green); }
-.blue-text { color: var(--blue); }
 
 /* ---------- Releases Matrix Table ---------- */
 .installer-matrix {
